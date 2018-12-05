@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="gmail.chorman64.xmlns.sentry.savedata" xmlns:tns="gmail.chorman64.xmlns.sentry.savedata" elementFormDefault="qualified">
+
+<simpleType name="boundaccount">
+	<restriction base="string">
+		<pattern value="[\w\.\-]+@\w+.[\w\.]"/>
+	</restriction>
+</simpleType>
+
+<complexType name="validationtype">
+	<sequence>
+		<element name="gameuid" type="integer"/>
+		<element name="savetimestamp" type="dateTime"/>
+	</sequence>
+</complexType>
+<complexType name="gametype">
+<sequence>
+	<element name="gameid" type="string"/>
+	<element name="gamevalidate" type="tns:validationtype"/>
+	<element name="gamever" type="string"/>
+</sequence>
+</complexType>
+<complexType name="entrytype-int">
+<sequence>
+	<element name="key" type="string"/>
+	<element name="value" type="integer"/>
+</sequence>
+</complexType>
+<complexType name="entrytype-string">
+<sequence>
+	<element name="key" type="string"/>
+	<element name="value" type="string"/>
+</sequence>
+</complexType>
+<complexType name="entrytype-list">
+<sequence>
+	<element name="key" type="string"/>
+	<element name="value" type="tns:listtype"/>
+</sequence>
+</complexType>
+
+<complexType name="listtype">
+	<sequence>
+		<element name="intmapping" type="tns:entrytype-int" minOccurs="0" maxOccurs="unbounded"/>
+		<element name="stringmapping" type="tns:entrytype-string" minOccurs="0" maxOccurs="unbounded"/>
+		<element name="listmapping" type="tns:entrytype-list" minOccurs="0" maxOccurs="unbounded"/>
+	</sequence>
+</complexType>
+<complexType name="datatype">
+<sequence>
+	<element name="sentryAccount" type="tns:boundaccount" minOccurs="0"/>
+	<element name="game" type="tns:gametype"/>
+	<element name="saveddata" type="tns:listtype"/>
+</sequence>
+</complexType>
+<element name="save" type="tns:datatype"/>
+
+</schema>

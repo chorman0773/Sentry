@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="gmail.chorman64.xmlns.sentry.savedata" xmlns="gmail.chorman64.xmlns.sentry.savedata">
+	
+
+    <xs:simpleType name="accounttype">
+    	<xs:restriction base="xs:string">
+    		<xs:pattern value="[\w\-.]+@[\w]+\.[\w.]+"/>
+    	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="elementtype">
+    	<xs:sequence>
+    		<xs:element name="account" type="accounttype"/>
+    	</xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="listtype">
+    	<xs:sequence>
+    		<xs:element name="element" type="elementtype" minOccurs="0" maxOccurs="unbounded"/>
+   		</xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="liststype">
+    	<xs:sequence>
+    		<xs:element name="list" type="listtype" maxOccurs="unbounded"/>	
+    		<xs:element name="game" type="gametype" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="gametype">
+    	<xs:sequence>
+    		<xs:element name="list" type="listtype" maxOccurs="unbounded"/>	
+    		<xs:element name="gameid" type="xs:string"/>
+    	</xs:sequence>
+    </xs:complexType>
+    <xs:element name="lists" type="liststype"/>
+</xs:schema>

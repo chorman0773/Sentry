@@ -1,0 +1,38 @@
+SentryFS:
+/ -> Root directory
+    /auth -> Post authentication requests here
+    /session -> Session Information.
+        /session/expiry -> Expiry Date of the Session (text/plain)
+        /session/game -> UUID of the game (text/plain)
+        /session/refresh -> Renews a session (POST)
+    /user -> Directory for user information. Requires valid session. DELETE requires Elevated Session
+        /user/name -> The username associated with the account (text/plain;utf8). POST requires Elevated Session
+        /user/id ->  The UUID associated with the account (text/plain)
+        /user/address -> The Email Address associated with the account (text/plain;utf8). POST requires Elevated Session.
+        /user/upgrades -> Contains a json array of upgrade objects (application/json;utf8)
+    /fs -> Sentry RemoteFS Base Directory. Requires a valid session.
+        /fs/current -> Alias Directory for the game associated with the session. All Subfiles have GET, PUT, and DELETE
+        /fs/paths -> Directory for querying information about paths within the /fs/current system
+            /fs/paths/.../entries -> Empty for Regular files. Otherwise contains a ; separated list of subfolders
+            /fs/paths/.../type -> Type of the Directory
+            /fs/paths/.../size -> 0 For Directories. Otherwise returns size (in bytes) that the file consumes
+            /fs/paths/.../mkdir -> Creates the Directory labeled by the pathname.
+            /fs/paths/.../link -> Post a pathname to make that path a hard link to this
+            /fs/paths/.../slink -> Post a pathname to make that path a symbolic link to this
+            /fs/paths/.../mov -> Post a pathname to move this to the pathname. Effectively POST /fs/paths/.../link <pathname>; DELETE /fs/current/...
+            /fs/paths/.../copy -> Post a pathname to copy this to the pathname
+        /fs/info -> Information about the RemoteFS
+            /fs/info/capacity -> The Storage Capacity that all Games share for this account (in KiB).
+        /fs/resource -> Resource Control Directory
+            /fs/resource/lock -> Post pathname to gain exclusive access to the file. Results in 1 if the pathname cannot be locked, 0 otherwise.
+            /fs/resource/unlock -> Releases a filesystem lock.
+        /fs/fd -> Random Access unbuffered file access to paths. Requires a resource lock
+            /fs/fd/open -> Post pathname to open the file. Results in a file descriptor
+            /fs/fd/close -> Post file descriptor to close that file.
+            /fs/fd/<fd> -> Information about a file descriptor
+                /fs/fd/<fd>/read -> Reads binary data and atomically updates position (application/octet-stream)
+                /fs/fd/<fd>/write -> Writes binary data and atomically updates position (application/octet-stream)
+                /fs/fd/<fd>/remaining -> Returns the number of bytes remaining in the file
+                /fs/fd/<fd>/position -> Returns the position. On post, atomically updates position to the value
+                /fs/fd/<fd>/size -> Returns the size of the file. On post, truncates the file to that size
+        

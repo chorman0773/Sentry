@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="gmail.chorman64.xmlns.sentry.account" targetNamespace="gmail.chorman64.xmlns.sentry.account">
+    <complexType name="accounttype">
+
+    	<sequence>
+    		<element name="accountid" type="tns:accountidtype"></element>
+    		<element name="upgrades" type="tns:upgradestypes"></element>
+    	</sequence>
+    </complexType>
+
+    
+    <simpleType name="accountidtype">
+    	<restriction base="string">
+    		<pattern value="[\w\-.]+@[\w]+\.[\w.]+"/>
+    	</restriction>
+    </simpleType>
+     <complexType name="upgradet">
+    	<sequence>
+    		<element name="type" type="string"/>
+    		<element name="enddate" type="date"/>
+    		<element name="uuid" type="tns:uuidt"/>
+    	</sequence>
+    </complexType>
+	<simpleType name="uuidt">
+	<restriction base="string">
+		<pattern value="([1-9]|[A-F]|[a-f]){8}-([1-9]|[A-F]|[a-f]){4}-([1-9]|[A-F]|[a-f]){4}-([1-9]|[A-F]|[a-f]){4}-([1-9]|[A-F]|[a-f]){12}"/>
+	</restriction>
+	</simpleType>
+    <complexType name="upgradestypes">
+    	<sequence>
+    		<element name="upgrade" type="tns:upgradet" minOccurs="0" maxOccurs="unbounded" />
+    	</sequence>
+    </complexType>
+    <simpleType name="passwordtype">
+    <restriction base="string">
+    </restriction>
+    </simpleType>
+    <complexType name="accountliststype">
+    <sequence>
+    <element name="account" type="tns:accounttype" minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+    </complexType>
+	<element name="accountlist" type="tns:accountliststype"/>
+</schema>
