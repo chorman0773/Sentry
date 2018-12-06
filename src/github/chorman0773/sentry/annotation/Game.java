@@ -31,9 +31,6 @@ public @interface Game {
 	/**
 	The Domain of the game, which is a java legal identifier (unqualified), that ids this game. 
 	Should be in lowerCamelCase
-	<br/>If this identifier is not a java legal identifier under the ROOT locale the following error message will be displayed
-	<br/>Cannot launch game: Malformed {@literal @Game} annotation<br/> value of gameId is not an identifier.
-	<br/>Unlike actual java identifiers this can technically include reserved words.
 	*/
 	String gameId();
 	/**
@@ -41,7 +38,7 @@ public @interface Game {
 	*/
 	String gameName();
 	/**
-	The version of the game. Should be in {@literal<MAJOR>.<MINOR>.<BUILD>} but can be any versioning format.
+	The version of the game. Requires LCLib Version Format
 	*/
 	String gameVersion();
 	/**
@@ -61,20 +58,16 @@ public @interface Game {
 	If mods are loaded they can be forced to be disabled through the Launcher Interface
 	*/
 	boolean allowsMods() default true;
-	/**
-	A List of urls pointing to jars to classload. This does not guarentee that the jars are opened at the same scope as the Game. To do so, place the dependancies in the ".launch" file.<br/>
-	defaults to an empty array
-	<br/> if Any of the urls are malformed or do not exist then the below error message will be displayed
-	<br/>Unable to launch: Malformed {@literal @Game} Annotation<br/>One or more dependancyUrls is malformed or does not exist
-	*/
-	String[] dependancyUrls() default {};
-	/**
-	A List of fully qualified class names to initialize (by calling Class.forName(<name>,true,loader))
-	This may cause an exception, which will crash the game. So it is more reliable to provide a launch.xml file.<br/>
-	defaults to an empty array.
-	<br/>Annother reliable way to load classes for within a games code is to add the {@literal @ForceLoading} annotation
-	to the class. This only works for the game itself however.
-	*/
-	String[] classesToInit() default {};
+	
+	public Provider provider() default @Provider();
+	
+	public enum ClassInitFailBehavior{
+		CRASH, IGNORE, WARN;
+	}
+	public @interface ClassInitializer{
+		public Class<?> value();
+		public ClassInitFailBehavior failBehavior() default ClassInitFailBehavior.CRASH;
+	}
+	public ClassInitializer[] classesToInit() default {};
 
 }
