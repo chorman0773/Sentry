@@ -48,9 +48,10 @@ public @interface Game {
 	boolean displayVersion()default false;
 	/**
 	The serialVersionUID of the game. <br/>
-	Used in determining The Serial Identity of the game.
+	Used in determining The Serial Identity of the game.<br/>
+	This is being phased out but is still useable
 	*/
-	long serialId();
+	long serialId() default 0;
 	/**
 	Whether or not the game allows mods to be added via the launcher<br/>
 	Note: This does not prevent Custom Clients from being used, and custom launchers may ignore this property and inject mods anyways. This is only respected in the vanilla, 1st party sentry launcher.<br/>
