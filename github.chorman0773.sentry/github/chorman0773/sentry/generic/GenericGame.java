@@ -120,10 +120,10 @@ public abstract class GenericGame extends GameBasic{
     }catch(InterruptedException e){}
     graphicsInterruptThread.interrupt();
   }
-  public GenericGameProfiler getTickProfiler() {
+  public final GenericGameProfiler getTickProfiler() {
 	  return tickTimer;
   }
-  public GenericGameProfiler getRenderProfiler() {
+  public final GenericGameProfiler getRenderProfiler() {
 	  return renderTimer;
   }
 };
