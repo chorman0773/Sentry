@@ -11,7 +11,7 @@ class ShadeHeader implements ShadeConstants {
 	private int flags;
 	private Crypto cryptoHeader;
 	private Crypto crypt;
-	private static final Version FLAGS_VERSION = new Version(1,0);
+	private static final Version FLAGS_VERSION = new Version(1,2);
 	
 	static class Crypto{
 		byte[] iv = new byte[16];

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Provider {
-	public String name() default "";
+	public String id() default "";
 	public String humanName() default "";
 	public String publicKey() default "";
 }

@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 /**
  * Represents the Raw Structure of The Legacy Sentry Save Format.
  * @author connor
- * @deprecated The Sentry Save format is deprecated. Prefer ShadeNBT and CryptoShade to This format)
+ * @deprecated The Sentry Save format is deprecated. Prefer ShadeNBT and CryptoShade to This format). This class was deprecated during Phase 3 of the Sentry Codebase Transition.
  */
 @Deprecated(forRemoval=true)
 public class RawSaveData {

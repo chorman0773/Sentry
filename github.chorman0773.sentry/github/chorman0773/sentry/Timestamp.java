@@ -3,6 +3,7 @@ package github.chorman0773.sentry;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+@Deprecated(forRemoval=true)
 public final class Timestamp {
 	private static SecureRandom uuidRandom = new SecureRandom();
 	private final long timeMilis;

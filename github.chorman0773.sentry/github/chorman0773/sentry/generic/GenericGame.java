@@ -15,6 +15,8 @@ public abstract class GenericGame extends GameBasic{
   private Thread tickThread;
   private Thread renderThread;
   private boolean running;
+  private boolean pauseGraphics;
+  private boolean pauseGame;
   public static class GenericGameProfiler{
 	  private Instant startTime;
 	  private long totalTicks;
@@ -83,6 +85,7 @@ public abstract class GenericGame extends GameBasic{
     	tickTimer = new GenericGameProfiler(tickRate);
         while(running){
           while(!Thread.interrupted());
+          if(pauseGame)continue;
           GenericGame.this.tick();
           tickTimer.tick();
         }
@@ -91,19 +94,35 @@ public abstract class GenericGame extends GameBasic{
     renderThread = new Thread(new Runnable(){
       public void run(){
     	renderTimer = new GenericGameProfiler(frameRate);
-        while(running){ 
+        while(running){
           try {
         	  while(!Thread.interrupted());
+        	    if(pauseGraphics)continue;
 				EventQueue.invokeAndWait(GenericGame.this::repaint);
 				renderTimer.tick();
-			} catch (InvocationTargetException | InterruptedException e) {}
+			} catch (InterruptedException e) {}
+          	catch(InvocationTargetException e) {
+          		System.err.println("Error Occurred During rendering");
+          		e.printStackTrace();
+          	}
         }
       }
     });
     graphicsInterruptThread = new Thread(this::renderLoop);
     doInit();
   }
-  
+  protected final void pauseGame() {
+	  this.pauseGame = true;
+  }
+  protected final void unpauseGame() {
+	  this.pauseGame = false;
+  }
+  protected final void pauseGraphics() {
+	  this.pauseGraphics = true;
+  }
+  protected final void unpauseGraphics() {
+	  this.pauseGraphics = true;
+  }
   protected void doInit()throws Exception {}
   
   public final void run(){

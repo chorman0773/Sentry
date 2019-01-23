@@ -4,7 +4,9 @@ package github.chorman0773.sentry.rollback;
  * @author Connor
  *
  * @param <R>
+ * @deprecated
  */
+@Deprecated(forRemoval=true)
 public interface Rollable<R extends Rollable<R>> {
 /**
  * Returns and/or updates the current state of the rollable

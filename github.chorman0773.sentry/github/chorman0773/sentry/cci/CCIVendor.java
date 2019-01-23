@@ -1,5 +1,6 @@
 package github.chorman0773.sentry.cci;
 
+import java.security.ProtectionDomain;
 import java.security.PublicKey;
 import java.util.UUID;
 
@@ -39,4 +40,20 @@ public interface CCIVendor {
 	EnumVendorTrustLevel getTrustLevel();
 	void trust();
 	void block();
+	static CCIVendor getFromCaller() {
+		return null;
+	}
+	static CCIVendor getFromClassSource(Class<?> cl) {
+		return getFromProtectionDomain(cl.getProtectionDomain());
+	}
+	static CCIVendor getFromProtectionDomain(ProtectionDomain domain) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	static ICCICore getCoreFromModule(Module m) {
+		return null;
+	}
+	static ICCICore getCoreFromProtectionDomain(ProtectionDomain domain) {
+		return null;
+	}
 }

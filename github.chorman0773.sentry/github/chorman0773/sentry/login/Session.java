@@ -4,21 +4,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.JsonObject;
 
+import github.chorman0773.sentry.login.fs.SentrySessionKeyPrincipal;
+
 public class Session {
-	private byte[] sessionToken;
-	private byte[] authToken;
+	private SentrySessionKeyPrincipal session;
 	
-	public Session(String name,String pwd) throws IOException {
-		JsonObject obj = new JsonObject();
-		obj.addProperty("reqcode", 0);
-		obj.addProperty("account", name);
-		obj.addProperty("password", pwd);
-		obj = (JsonObject) post("/auth",obj);
+	public Session(String id,PrivateKey priv,PublicKey pub) throws IOException {
+		session = new SentrySessionKeyPrincipal(id,pub,priv);
 	}
 	public Object query(String path) {
 		return null;

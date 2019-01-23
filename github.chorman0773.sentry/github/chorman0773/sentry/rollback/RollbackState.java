@@ -7,5 +7,5 @@ package github.chorman0773.sentry.rollback;
  * @param <R> Restricts this RollbackState to a type of Rollable
  */
 public interface RollbackState<R extends Rollable<R>> {
-void rollback();
+	void rollback();
 }
