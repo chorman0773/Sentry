@@ -29,7 +29,6 @@ module github.chorman0773.sentry {
 
 	requires transitive github.lightningcreations.lclib;
 	requires transitive gson;
-	requires http;
 	requires transitive java.desktop;
 	requires transitive java.instrument;
 	requires transitive java.xml;

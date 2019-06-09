@@ -1,14 +1,21 @@
 package github.chorman0773.sentry.test;
 
+import java.awt.EventQueue;
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javax.swing.JFrame;
 
 import github.chorman0773.sentry.GameBasic;
 import github.chorman0773.sentry.annotation.Game;
@@ -27,6 +34,43 @@ public final class TestLauncher implements LauncherInterface {
 		this.args = args;
 		this.gannot = g.getClass().getAnnotation(Game.class);
 		p = FileSystems.getDefault().getPath(".").toAbsolutePath();
+		try {
+			EventQueue.invokeAndWait(()->{
+				JFrame f = new JFrame(gannot.gameName()+" "+gannot.gameVersion());
+				f.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowOpened(WindowEvent e) {
+						g.instantiate(args, TestLauncher.this);
+						g.init();
+						g.start();
+					}
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						close();
+					}
+
+					@Override
+					public void windowIconified(WindowEvent e) {
+						g.stop();
+					}
+
+					@Override
+					public void windowDeiconified(WindowEvent e) {
+						g.start();
+					}
+					
+				});
+				f.setSize(g.getSize());
+				f.setResizable(false);
+				f.add(g);
+				f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				f.setVisible(true);
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	@Override
 	public String[] getGameArguments() {
@@ -49,7 +93,7 @@ public final class TestLauncher implements LauncherInterface {
 	@Override
 	public CCIVendor getLauncherVendor() {
 		// TODO Auto-generated method stub
-		return null;
+		return CCIVendor.getFromCaller();
 	}
 
 	@Override
@@ -72,6 +116,8 @@ public final class TestLauncher implements LauncherInterface {
 
 	@Override
 	public void close() {
+		game.stop();
+		game.destroy();
 		w.setVisible(false);
 		w.dispose();
 	}

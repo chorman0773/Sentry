@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Map;
@@ -159,7 +160,6 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 			thread.join();
 		}catch(InterruptedException t){}
 		thread = null;
-		launcher.close();
 	}
 	/**
 	 * Exits the game. Should only be called in a Windowed Context. Shows the Exit Code before calling stop and destroy.
@@ -167,8 +167,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	 * @param exitCode
 	 */
 	public void exit(int exitCode){
-		this.stop();
-		this.destroy();
+		launcher.close();
 	}
 	protected void destroyOverride() {}
 	/**
@@ -240,6 +239,15 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	public Path getDirectory() {
 		return launcher.getGameDirectory();
 	}
+	
+	private PrintWriter writer;
+	public PrintWriter getWriter() {
+		if(writer==null)
+			return writer = new PrintWriter(launcher.getLauncherWriter());
+		else
+			return writer;
+	}
+	
 	public LauncherInterface getLauncherInterface() {
 		return launcher;
 	}
