@@ -26,7 +26,7 @@ public final class TestLauncher implements LauncherInterface {
 		this.game = g;
 		this.args = args;
 		this.gannot = g.getClass().getAnnotation(Game.class);
-		
+		p = FileSystems.getDefault().getPath(".").toAbsolutePath();
 	}
 	@Override
 	public String[] getGameArguments() {
@@ -61,7 +61,7 @@ public final class TestLauncher implements LauncherInterface {
 	@Override
 	public Path getGameDirectory() {
 		// TODO Auto-generated method stub
-		return null;
+		return p;
 	}
 
 	@Override

@@ -23,6 +23,7 @@ SentryFS:
             /fs/paths/.../copy -> Post a pathname to copy this to the pathname
         /fs/info -> Information about the RemoteFS
             /fs/info/capacity -> The Storage Capacity that all Games share for this account (in KiB).
+			/fs/info/available -> The Storage Capacity available to games to use for this account (in KiB).
         /fs/resource -> Resource Control Directory
             /fs/resource/lock -> Post pathname to gain exclusive access to the file. Results in 1 if the pathname cannot be locked, 0 otherwise.
             /fs/resource/unlock -> Releases a filesystem lock.
