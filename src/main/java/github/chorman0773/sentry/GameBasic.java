@@ -30,6 +30,7 @@ import github.chorman0773.sentry.text.TextComponent;
  */
 public abstract class GameBasic extends JPanel implements Runnable, Serializable, Thread.UncaughtExceptionHandler{	
 	
+	
 	public static final Gson gson = new GsonBuilder()
 	.registerTypeAdapter(TextComponent.class, new TextComponent.TextComponentDeserializer())
 	.create();
