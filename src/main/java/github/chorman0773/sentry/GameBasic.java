@@ -7,8 +7,11 @@ import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
+
 import javax.swing.JPanel;
 
 import com.google.gson.Gson;
@@ -106,7 +109,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	 * initGame does nothing unless overriden but is completely optional to override.
 	 */
 	public final void init(){
-		thread = new Thread(this);
+		thread = new Thread(this,"Sentry-GameThread");
 		thread.setUncaughtExceptionHandler(this);
 		try {
 			initGame();
@@ -199,6 +202,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 
 	public void addClickListener(int input,ClickListener c){
 		if(!hasAddedClickListener){
+			clicks = new HashMap<>();
 			hasAddedClickListener = true;
 			this.addMouseListener(new MouseAdapter(){
 
@@ -218,6 +222,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	}
 	public void addInputListener(int input, InputListener i){
 		if(!hasAddedInputListener){
+			this.inputs = new HashMap<>();
 			hasAddedInputListener = true;
 			this.addKeyListener(new KeyAdapter(){
 
@@ -235,6 +240,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 			});
 
 		}
+		this.inputs.put(input, i);
 	}
 
 	public Path getDirectory() {
@@ -244,7 +250,7 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	private PrintWriter writer;
 	public PrintWriter getWriter() {
 		if(writer==null)
-			return writer = new PrintWriter(launcher.getLauncherWriter());
+			return writer = new PrintWriter(launcher.getLauncherWriter(),true);
 		else
 			return writer;
 	}

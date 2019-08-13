@@ -9,15 +9,18 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import github.chorman0773.sentry.GameBasic;
 import github.chorman0773.sentry.annotation.Game;
 import github.chorman0773.sentry.cci.CCIVendor;
+import github.lightningcreations.lcjei.IEngineInterface;
+import github.lightningcreations.lcjei.IGameInfo;
 
 /**
  * Interface for most Standard Sentry Launcher Interfaces
  * @author connor
  *
  */
-public interface LauncherInterface {
+public interface LauncherInterface extends IEngineInterface<GameBasic> {
 	/**
 	 * Gets the list of Arguments passed to the game
 	 */
@@ -36,7 +39,8 @@ public interface LauncherInterface {
 	 */
 	public CCIVendor getLauncherVendor();
 	/**
-	 * Obtains the Window that the game is running in.
+	 * Obtains the Window that the game is running in.<br/>
+	 * By default, the Engine is initialized to draw to this window. 
 	 */
 	public Window getGameWindow();
 	
@@ -53,9 +57,39 @@ public interface LauncherInterface {
 	public Instrumentation getInstrumentation();
 	
 	/**
-	 * Called when the game exits
+	 * Called to exit the game. <br/>
+	 * 
+	 *  A call to close() implies a call to destroy(). The launcher cannot be reinitialized after a call to close().<br/>
+	 *  This method may only be called if initiailized using a frame provided by the implementation. 
+	 *   Calling this method in violation of this Contract or the contract provided by destory() causes an {@link java.lang.IllegalStateException} to be thrown.<br/>
+	 *  @see destroy() to exit the game on a temporary basis. 
+	 *  @throws IllegalStateException if the contract defined here or by {@link #destroy()} is violated.
 	 */
-	void close();
+	void close() throws IllegalStateException;
+	
+	/**
+	 * Returns information about the current game.<br/>
+	 * Unlike {@link IEngineInterface#getGameInfo()}, this method is Mandatory.<br/>
+	 * Method calls for the returned IGameInfo are required to match the values associated with the Game Annotation.<br/>
+	 */
+	@Override
+	IGameInfo<GameBasic> getGameInfo();
+	
+	/**
+	 * Destroys the Game Instance, calling stop and destroy in sequence if not already called.<br/>
+	 * It is possible to create a new window for the game by calling {@link LauncherInterface#initialize()}.<br/>
+	 * <br/>
+	 * {@inheritDoc}
+	 */
+	public void destroy();
+	
+	/**
+	 * Constructs a new Window in an implementation defined manner, and binds the game to it.<br/>
+	 * After this call, {@link IEngineInterface#getCurrentDrawContainer()} will return the same as {@link LauncherInterface#getGameWindow()}.<br/>
+	 * <br/>
+	 * {@inheritDoc}
+	 */
+	public void initialize();
 	
 	/**
 	 * Obtains a writer to print to the launcher terminal

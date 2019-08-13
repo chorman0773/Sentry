@@ -26,6 +26,7 @@ public abstract class GenericGame extends GameBasic{
 	  private int target;
 	  GenericGameProfiler(int target){
 		  startTime = Instant.now();
+		  lastTickTime = startTime;
 	  }
 	  public double getAverageTps() {
 		  return averageTps;
@@ -90,7 +91,7 @@ public abstract class GenericGame extends GameBasic{
           tickTimer.tick();
         }
       }
-    });
+    },"SentryGame-Tick");
     renderThread = new Thread(new Runnable(){
       public void run(){
     	renderTimer = new GenericGameProfiler(frameRate);
@@ -107,7 +108,7 @@ public abstract class GenericGame extends GameBasic{
           	}
         }
       }
-    });
+    },"SentryGame-Render");
     graphicsInterruptThread = new Thread(this::renderLoop);
     doInit();
   }

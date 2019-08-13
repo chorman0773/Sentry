@@ -32,6 +32,8 @@ module github.chorman0773.sentry {
 	requires transitive java.desktop;
 	requires transitive java.instrument;
 	requires transitive java.xml;
+	requires java.sql;
+	requires transitive github.lightningcreations.lcjei;
 	uses GameBasic;
 	provides FileSystemProvider with github.chorman0773.sentry.login.fs.GameFilesystemProvider;
 }

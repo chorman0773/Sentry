@@ -1,5 +1,6 @@
 package github.chorman0773.sentry.test;
 
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
@@ -14,6 +15,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import javax.swing.JFrame;
 
@@ -22,6 +24,8 @@ import github.chorman0773.sentry.annotation.Game;
 import github.chorman0773.sentry.cci.CCIVendor;
 import github.chorman0773.sentry.linterface.LauncherInterface;
 import github.chorman0773.sentry.linterface.ModInterface;
+import github.lightningcreations.lcjei.IEngineInterface;
+import github.lightningcreations.lcjei.IGameInfo;
 
 public final class TestLauncher implements LauncherInterface {
 	private final GameBasic game;
@@ -29,48 +33,47 @@ public final class TestLauncher implements LauncherInterface {
 	private final Game gannot;
 	private Window w;
 	private Path p;
+	private Container c;
+	private IGameInfo<GameBasic> info = new IGameInfo<>() {
+
+		@Override
+		public Class<? extends GameBasic> getGameClass() {
+			// TODO Auto-generated method stub
+			return game.getClass();
+		}
+
+		@Override
+		public Class<? extends IEngineInterface<GameBasic>> getEngineInterfaceClass() {
+			// TODO Auto-generated method stub
+			return TestLauncher.class;
+		}
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return gannot.gameName();
+		}
+
+		@Override
+		public String getVersion() {
+			// TODO Auto-generated method stub
+			return gannot.gameVersion();
+		}
+
+		@Override
+		public UUID getGameId() {
+			// TODO Auto-generated method stub
+			return UUID.fromString(gannot.uuid());
+		}
+		
+	};
+	
 	public TestLauncher(GameBasic g,String[] args) {
 		this.game = g;
 		this.args = args;
 		this.gannot = g.getClass().getAnnotation(Game.class);
 		p = FileSystems.getDefault().getPath(".").toAbsolutePath();
-		try {
-			EventQueue.invokeAndWait(()->{
-				JFrame f = new JFrame(gannot.gameName()+" "+gannot.gameVersion());
-				f.addWindowListener(new WindowAdapter() {
-
-					@Override
-					public void windowOpened(WindowEvent e) {
-						g.instantiate(args, TestLauncher.this);
-						g.init();
-						g.start();
-					}
-
-					@Override
-					public void windowClosing(WindowEvent e) {
-						close();
-					}
-
-					@Override
-					public void windowIconified(WindowEvent e) {
-						g.stop();
-					}
-
-					@Override
-					public void windowDeiconified(WindowEvent e) {
-						g.start();
-					}
-					
-				});
-				f.setSize(g.getSize());
-				f.setResizable(false);
-				f.add(g);
-				f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				f.setVisible(true);
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		g.instantiate(args, this);
 	}
 	@Override
 	public String[] getGameArguments() {
@@ -116,10 +119,8 @@ public final class TestLauncher implements LauncherInterface {
 
 	@Override
 	public void close() {
-		game.stop();
-		game.destroy();
-		w.setVisible(false);
-		w.dispose();
+		destroy();
+		System.exit(0);
 	}
 
 	@Override
@@ -148,6 +149,87 @@ public final class TestLauncher implements LauncherInterface {
 	@Override
 	public ModInterface installMod(URI name) throws UnsupportedOperationException, IOException {
 		return null;
+	}
+	@Override
+	public boolean initialize(Container c) throws IllegalStateException {
+		if(c==null) {
+			initialize();
+			return false;
+		}
+		if(!c.isDisplayable())
+			throw new IllegalArgumentException();
+		this.c = c;
+		c.add(game);
+		
+		return true;
+	}
+	@Override
+	public void run() throws IllegalStateException {
+		game.init();
+		game.start();
+	}
+	@Override
+	public Container getCurrentDrawContainer() {
+		// TODO Auto-generated method stub
+		return c;
+	}
+	@Override
+	public GameBasic getGameObject() {
+		// TODO Auto-generated method stub
+		return game;
+	}
+	@Override
+	public IGameInfo<GameBasic> getGameInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void destroy() {
+		if(c==null)
+			throw new IllegalStateException("This Engine has not yet been initialized or has been already destroyed");
+		game.stop();
+		game.destroy();
+		if(w!=null)
+			w.dispose();
+		w = null;
+		c = null;
+	}
+	@Override
+	public void initialize() {
+		try {
+			if(c!=null)
+				throw new IllegalStateException("This Engine has already been initialized");
+			EventQueue.invokeAndWait(()->{
+				JFrame f = new JFrame(gannot.gameName()+" "+gannot.gameVersion());
+				f.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						destroy();
+					}
+
+					@Override
+					public void windowIconified(WindowEvent e) {
+						game.stop();
+					}
+
+					@Override
+					public void windowDeiconified(WindowEvent e) {
+						game.start();
+					}
+					
+				});
+				f.setSize(game.getSize());
+				f.setResizable(false);
+				f.add(game);
+				f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				f.setVisible(true);
+				this.w = f;
+			});
+			c = game;
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

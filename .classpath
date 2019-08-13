@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="bin/main" path="src/main/java">
+	<classpathentry kind="src" output="bin/main" path="src/main/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/LCLib-Java">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/">
 		<attributes>
@@ -17,7 +21,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/LCLib-Java">
+	<classpathentry kind="lib" path="Java Engine Interface-1.0.jar" sourcepath="/Java Engine Interface/src/main/java">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
