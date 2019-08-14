@@ -1,5 +1,7 @@
 package github.chorman0773.sentry;
 
+import github.lightningcreations.lcjei.IEngineInterface;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -267,5 +269,9 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	public Session getSession() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public IEngineInterface<GameBasic> getEngineInterface(){
+		return launcher;
 	}
 }
