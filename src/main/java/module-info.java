@@ -24,6 +24,7 @@ module github.chorman0773.sentry {
 	exports github.chorman0773.sentry;
 	exports github.chorman0773.sentry.login;
 	exports github.chorman0773.sentry.text;
+	exports github.chorman0773.sentry.test;
 	exports github.chorman0773.sentry.generic;
 	exports github.chorman0773.sentry.serial;
 

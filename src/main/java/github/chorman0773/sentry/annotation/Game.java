@@ -60,15 +60,46 @@ public @interface Game {
 	*/
 	boolean allowsMods() default true;
 	
+	/**
+	 * The provider for the game. By default its the provider that is specified by the launch descriptor (if such a provider exists)
+	 */
 	public Provider provider() default @Provider();
 	
+	/**
+	 * The behavior of a ClassInitializer if the class initializer for the target class throws an exception.
+	 * @author chorm
+	 */
 	public enum ClassInitFailBehavior{
-		CRASH, IGNORE, WARN;
+		/**
+		 * Causes the game to crash when a class initializer for classesToInit throws an exception
+		 */
+		CRASH,
+		/**
+		 * Ignores any failing initializer for classesToInit
+		 */
+		IGNORE,
+		/**
+		 * Same as ignore, but the launcher is requested to display a non-failing diagnostic to the Launcher output frame.
+		 */
+		WARN;
 	}
+	/**
+	 * A descriptor for classesToInit.
+	 */
 	public @interface ClassInitializer{
+		/**
+		 * The class to initialize
+		 */
 		public Class<?> value();
+		/**
+		 * The behavior when the initializer throws an exception. By default, it causes the game to crash
+		 * @see ClassInitFailBehavior
+		 */
 		public ClassInitFailBehavior failBehavior() default ClassInitFailBehavior.CRASH;
 	}
+	/**
+	 * List of Classes to Initialize
+	 */
 	public ClassInitializer[] classesToInit() default {};
 
 }

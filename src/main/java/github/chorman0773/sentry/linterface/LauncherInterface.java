@@ -37,11 +37,15 @@ public interface LauncherInterface extends IEngineInterface<GameBasic> {
 	/**
 	 * Obtains the vendor of the running launcher
 	 */
+	@Deprecated
 	public CCIVendor getLauncherVendor();
 	/**
 	 * Obtains the Window that the game is running in.<br/>
-	 * By default, the Engine is initialized to draw to this window. 
+	 * By default, the Engine is initialized to draw to this window.<br/>
+	 * @deprecated Due to the introduction of LCJEI, it is possible for a Sentry game to be embedded into a Container that is not a Window. 
+	 * In these cases, the method returns null. Use {@link #getCurrentDrawContainer()} instead. 
 	 */
+	@Deprecated
 	public Window getGameWindow();
 	
 	/**

@@ -13,6 +13,10 @@ import com.google.gson.JsonObject;
 
 import github.chorman0773.sentry.login.fs.SentrySessionKeyPrincipal;
 
+/**
+ * Basic class for Constructing Sentry Sessions
+ * @author chorm
+ */
 public class Session {
 	private SentrySessionKeyPrincipal session;
 	

@@ -2,6 +2,7 @@
  * 
  */
 /**
+ * Package for Sentry Authorization. 
  * @author chorm
  *
  */

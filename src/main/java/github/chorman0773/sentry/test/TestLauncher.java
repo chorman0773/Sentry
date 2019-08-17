@@ -34,6 +34,9 @@ public final class TestLauncher implements LauncherInterface {
 	private Window w;
 	private Path p;
 	private Container c;
+	private volatile boolean suspended;
+	private volatile boolean initialized;
+	private volatile boolean executing;
 	private IGameInfo<GameBasic> info = new IGameInfo<>() {
 
 		@Override
@@ -113,8 +116,7 @@ public final class TestLauncher implements LauncherInterface {
 
 	@Override
 	public Instrumentation getInstrumentation() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("getInstrumentation");
 	}
 
 	@Override
@@ -151,7 +153,9 @@ public final class TestLauncher implements LauncherInterface {
 		return null;
 	}
 	@Override
-	public boolean initialize(Container c) throws IllegalStateException {
+	public synchronized boolean initialize(Container c) throws IllegalStateException {
+		if(this.initialized)
+			throw new IllegalStateException("initialize applied to initialized game");
 		if(c==null) {
 			initialize();
 			return false;
@@ -160,13 +164,16 @@ public final class TestLauncher implements LauncherInterface {
 			throw new IllegalArgumentException();
 		this.c = c;
 		c.add(game);
-		
+		this.initialized = true;
 		return true;
 	}
 	@Override
-	public void run() throws IllegalStateException {
+	public synchronized void run() throws IllegalStateException {
+		if(!this.initialized||this.executing)
+			throw new IllegalStateException("Cannot execute run on this current Launcher");
 		game.init();
 		game.start();
+		
 	}
 	@Override
 	public Container getCurrentDrawContainer() {
@@ -184,20 +191,23 @@ public final class TestLauncher implements LauncherInterface {
 		return null;
 	}
 	@Override
-	public void destroy() {
-		if(c==null)
+	public synchronized void destroy() {
+		if(!this.initialized)
 			throw new IllegalStateException("This Engine has not yet been initialized or has been already destroyed");
-		game.stop();
+		
+		if(!this.suspended)
+			game.stop();
 		game.destroy();
 		if(w!=null)
 			w.dispose();
 		w = null;
 		c = null;
+		this.initialized = false;
 	}
 	@Override
 	public void initialize() {
 		try {
-			if(c!=null)
+			if(this.initialized)
 				throw new IllegalStateException("This Engine has already been initialized");
 			EventQueue.invokeAndWait(()->{
 				JFrame f = new JFrame(gannot.gameName()+" "+gannot.gameVersion());
@@ -227,9 +237,25 @@ public final class TestLauncher implements LauncherInterface {
 				this.w = f;
 			});
 			c = game;
+			this.initialized = true;
 		} catch (InvocationTargetException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
+	@Override
+	public synchronized void resume() throws IllegalStateException {
+		if(!this.executing||!this.suspended)
+			throw new IllegalStateException("The Game must be suspended to resume");
+		this.suspended = false;
+		game.start();
+	}
+	@Override
+	public synchronized void suspend() throws IllegalStateException {
+		if(!this.executing||this.suspended)
+			throw new IllegalStateException("The Game must be executing to be suspended");
+		game.stop();	
+		this.suspended = true;
+	}
+	
 
 }

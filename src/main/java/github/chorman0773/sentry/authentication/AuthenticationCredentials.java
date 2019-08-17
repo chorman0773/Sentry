@@ -7,6 +7,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Arrays;
 
+@Deprecated
 public final class AuthenticationCredentials implements Cloneable, Closeable, Serializable {
 
 	/**
@@ -30,14 +31,14 @@ public final class AuthenticationCredentials implements Cloneable, Closeable, Se
 		     throws IOException{
 		throw new NotSerializableException("Can't serialize a Authentication class");
 	}
-		 protected final void readObject(java.io.ObjectInputStream in)
-		     throws IOException, ClassNotFoundException{
-			 throw new NotSerializableException("Can't serialize a Authentication class");
-		 }
-		 protected final void readObjectNoData()
-		     throws ObjectStreamException{
-			 throw new NotSerializableException("Can't serialize a Authentication class");
-		 }
+	 protected final void readObject(java.io.ObjectInputStream in)
+	     throws IOException, ClassNotFoundException{
+		 throw new NotSerializableException("Can't serialize a Authentication class");
+	 }
+	 protected final void readObjectNoData()
+	     throws ObjectStreamException{
+		 throw new NotSerializableException("Can't serialize a Authentication class");
+	 }
 	public final AuthenticationCredentials clone()throws CloneNotSupportedException{
 		throw new CloneNotSupportedException("cannot clone a Authentication class");
 	}

@@ -1,6 +1,10 @@
 package github.chorman0773.sentry.authorization;
 
-
+/**
+ * List of Sentry Scopes
+ * @author chorm
+ *
+ */
 public interface Scopes {
 	
 	String GENERAL = "general";

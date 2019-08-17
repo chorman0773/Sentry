@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URLConnection;
 
 public final class AuthenticationResponce implements Closeable, Cloneable, Serializable {
