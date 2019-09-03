@@ -16,7 +16,11 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Provider {
+	public static enum KeyType{
+		Empty, PublicKey, Certificate;
+	}
 	public String id() default "";
 	public String humanName() default "";
 	public String publicKey() default "";
+	public KeyType keyType() default KeyType.Empty;
 }
