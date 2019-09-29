@@ -14,6 +14,7 @@ import github.chorman0773.sentry.annotation.Game;
 import github.chorman0773.sentry.cci.CCIVendor;
 import github.lightningcreations.lcjei.IEngineInterface;
 import github.lightningcreations.lcjei.IGameInfo;
+import github.lightningcreations.lcjei.resources.ResourceSet;
 
 /**
  * Interface for most Standard Sentry Launcher Interfaces
@@ -127,4 +128,10 @@ public interface LauncherInterface extends IEngineInterface<GameBasic> {
 	 * @throws SentryException if the uri names something other then a well formed Mod Descriptor file
 	 */
 	public ModInterface installMod(URI name) throws UnsupportedOperationException, IOException;
+	
+	/**
+	 * Gets a ResourceSet for use by the game from the launcher.
+	 * This supersedes the use of {@link github.chorman0773.sentry.resources}
+	 */
+	public ResourceSet<Path> getResourceSet();
 }

@@ -29,18 +29,24 @@ import com.google.gson.JsonParser;
 
 import github.chorman0773.sentry.text.I18N;
 
+@Deprecated
 public class Resource {
 	private static final JsonParser parser = new JsonParser();
 	protected final ResourcePack owner;
-	private ResourceType type;
-
-	public Resource(ResourcePack owner,ResourceType type) {
+	private final ResourceType type;
+	private final String name;
+	
+	public Resource(ResourcePack owner,ResourceType type,String name) {
 		this.owner = owner;
 		this.type = type;
+		this.name = name;
 	}
 
 	public Map<String,Resource> getSubResources() {
 		return null;
+	}
+	public String getName() {
+		return name;
 	}
 	public ResourceType getType() {
 		return type;

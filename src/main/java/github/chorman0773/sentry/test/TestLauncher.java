@@ -26,8 +26,10 @@ import github.chorman0773.sentry.linterface.LauncherInterface;
 import github.chorman0773.sentry.linterface.ModInterface;
 import github.lightningcreations.lcjei.IEngineInterface;
 import github.lightningcreations.lcjei.IGameInfo;
+import github.lightningcreations.lcjei.resources.ResourceSet;
 
 public final class TestLauncher implements LauncherInterface {
+	
 	private final GameBasic game;
 	private final String[] args;
 	private final Game gannot;
@@ -255,6 +257,11 @@ public final class TestLauncher implements LauncherInterface {
 			throw new IllegalStateException("The Game must be executing to be suspended");
 		game.stop();	
 		this.suspended = true;
+	}
+	@Override
+	public ResourceSet<Path> getResourceSet() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

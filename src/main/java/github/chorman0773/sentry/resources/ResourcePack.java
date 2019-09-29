@@ -5,6 +5,7 @@ import java.util.Map;
 
 import github.chorman0773.sentry.text.I18N;
 
+@Deprecated
 public abstract class ResourcePack {
 
 	public ResourcePack() {

@@ -5,8 +5,12 @@ import java.awt.Window;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.instrument.Instrumentation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import github.chorman0773.sentry.GameBasic;
 import github.chorman0773.sentry.annotation.Game;
@@ -15,12 +19,29 @@ import github.chorman0773.sentry.linterface.LauncherInterface;
 import github.chorman0773.sentry.linterface.ModInterface;
 import github.lightningcreations.lcjei.IEngineInterface;
 import github.lightningcreations.lcjei.IGameInfo;
+import github.lightningcreations.lcjei.resources.ResourceSet;
 
 public final class WrappedLauncher<HostGameType> implements LauncherInterface {
-	private IEngineInterface<HostGameType> host;
+	private final IEngineInterface<HostGameType> host;
+	private final Path gameDir;
+	private final ResourceSet<Path> resources;
 	
-	public WrappedLauncher() {
-		// TODO Auto-generated constructor stub
+	private final GameBasic object;
+	private Container target;
+	
+	public WrappedLauncher(IEngineInterface<HostGameType> host,Path gameDir,ResourceSet<Path> resources,String[] args,Class<? extends GameBasic> target,Object...ctorParams) throws NoSuchMethodException, IllegalAccessException {
+		this.host = host;
+		this.gameDir = gameDir;
+		this.resources = resources;
+		MethodHandle ctor = MethodHandles.publicLookup().findConstructor(target, MethodType.methodType(void.class, Arrays.stream(ctorParams).map(Object::getClass).toArray(Class[]::new)));
+		try {
+			object = (GameBasic)ctor.invokeWithArguments(ctorParams);
+			object.instantiate(args, this);
+		} catch(RuntimeException|Error e) { 
+			throw e;
+		} catch (Throwable e) {
+			throw new ExceptionInInitializerError(e);
+		}
 	}
 	
 
@@ -33,7 +54,7 @@ public final class WrappedLauncher<HostGameType> implements LauncherInterface {
 	@Override
 	public GameBasic getGameObject() {
 		// TODO Auto-generated method stub
-		return null;
+		return object;
 	}
 
 	@Override
@@ -87,8 +108,7 @@ public final class WrappedLauncher<HostGameType> implements LauncherInterface {
 
 	@Override
 	public Instrumentation getInstrumentation() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -157,6 +177,13 @@ public final class WrappedLauncher<HostGameType> implements LauncherInterface {
 	public void suspend() throws IllegalStateException {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public ResourceSet<Path> getResourceSet() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

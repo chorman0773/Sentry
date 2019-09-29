@@ -2,6 +2,7 @@ package github.chorman0773.sentry.resources;
 
 import java.awt.Graphics;
 
+@Deprecated
 public abstract class TexturedObject {
 
 	public TexturedObject() {
