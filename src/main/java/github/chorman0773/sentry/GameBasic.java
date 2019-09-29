@@ -62,7 +62,21 @@ public abstract class GameBasic extends JPanel implements Runnable, Serializable
 	private String[] args;
 	private LauncherInterface launcher;
 	private Random random;
-
+	
+	/**
+	 * Base Constructor for all game classes. 
+	 * A Game class constructor must either be a nullary constructor, or only take parameters of the following types:
+	 * <ol>
+	 * <li> Primitive types such as int, float, double, char, etc.</li>
+	 * <li> String</li>
+	 * <li> An enumeration type </li>
+	 * <li> UUID</li>
+	 * <li> Class or MethodType</li>
+	 * <li> A final class that is annotated with {@literal @}{@link github.lightningcreations.lclib.annotation.Literal} and is, in fact, a Literal Type.</li>
+	 * <li> A Varargs Parameter of one of these types</li>
+	 * </ol>
+	 * Attempting to launch a game that does not have a constructor that meets these requires results in an error.
+	 */
 	public GameBasic(){
 		instance = this;
 	}
