@@ -1,0 +1,75 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "org.javamodularity:moduleplugin:1.6.0"
+  }
+}
+
+apply plugin: 'java'
+apply plugin: "org.javamodularity.moduleplugin"
+apply plugin: 'eclipse'
+
+sourceCompatibility = targetCompatibility = 11
+group = "github.chorman0773.sentry"
+archivesBaseName = "sentry-game-engine"
+version = "1.0"
+
+
+eclipse {
+   classpath {
+     file {
+        whenMerged {
+            entries.findAll { isModule(it) }.each {
+                it.entryAttributes['module'] = 'true'
+            }
+
+            entries.findAll { isSource(it) && isTestScope(it) }.each {
+                it.entryAttributes['test'] = 'true'
+            }
+
+            entries.findAll { isLibrary(it) && isTestScope(it) }.each {
+                it.entryAttributes['test'] = 'true'
+            }
+
+        }
+    }
+
+   defaultOutputDir = file('build')
+   downloadSources = true
+   downloadJavadoc = true
+  }
+}
+
+repositories {
+	mavenLocal()
+	maven {
+		name "Gac14 Maven"
+		url "https://lightningcreations.github.io/Maven"
+	}
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	compile 'github.lightningcreations:lclib-java:1.0'
+	compile 'github.lightningcreations:lcjei:1.0'
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson
+	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+	// https://mvnrepository.com/artifact/com.google.http-client/google-http-client
+	compile group: 'com.google.http-client', name: 'google-http-client', version: '1.32.1'
+}
+
+
+
+boolean isLibrary(entry) { 
+  return entry.properties.kind.equals('lib') || entry.properties.kind.equals('src') 
+}
+boolean isTestScope(entry) { 
+  return entry.entryAttributes.get('gradle_used_by_scope').equals('test'); }
+boolean isModule(entry) { 
+  return isLibrary(entry) && !isTestScope(entry); }
+boolean isSource(entry) { return entry.properties.kind.equals('src'); }
